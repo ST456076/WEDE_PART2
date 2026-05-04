@@ -95,14 +95,16 @@ function product_image_class($index) {
         </nav>
     </header>
 
-    <nav class="category-nav">
-        <a href="user_dashboard.php?category=Women">Women</a>
-        <a href="user_dashboard.php?category=Men">Men</a>
-        <a href="user_dashboard.php?category=Kids">Kids</a>
-        <a href="user_dashboard.php?category=Accessories">Accessories</a>
-        <span></span>
-        <a class="selling-link" href="add_listing.php">Start Selling</a>
-    </nav>
+<nav class="category-nav">
+    <a href="user_dashboard.php">All</a>
+    <a href="user_dashboard.php?category=Women">Women</a>
+    <a href="user_dashboard.php?category=Men">Men</a>
+    <a href="user_dashboard.php?category=Kids Clothes">Kids Clothes</a>
+    <a href="user_dashboard.php?category=Accessories">Accessories</a>
+    <a href="user_dashboard.php?category=Bags">Bags</a>
+    <a href="user_dashboard.php?category=Shoes">Shoes</a>
+    <a class="selling-link" href="add_listing.php">Start Selling</a>
+</nav>
 
     <?php if ($message !== '') { ?>
         <div class="toast-message"><?php echo htmlspecialchars($message); ?></div>

@@ -39,24 +39,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Add Listing</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="auth-body">
+
 <form class="auth-card wide" method="POST">
     <h2>Add a clothing listing</h2>
     <p class="muted">Upload the details of the item you want to sell.</p>
-    <?php if ($error !== '') { ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php } ?>
+
+    <?php if ($error !== '') { ?>
+        <div class="error"><?php echo htmlspecialchars($error); ?></div>
+    <?php } ?>
+
     <input type="text" name="title" placeholder="Item title" required>
+
     <textarea name="description" placeholder="Description"></textarea>
+
     <div class="two-cols">
         <input type="text" name="size" placeholder="Size e.g. M">
-        <input type="text" name="category" placeholder="Category e.g. Dresses">
+
+        <select name="category" required>
+    <option value="">Select Category</option>
+    <option value="Women">Women</option>
+    <option value="Men">Men</option>
+    <option value="Kids Clothes">Kids Clothes</option>
+    <option value="Accessories">Accessories</option>
+    <option value="Bags">Bags</option>
+    <option value="Shoes">Shoes</option>
+</select>
     </div>
+
     <div class="two-cols">
         <input type="text" name="condition_status" placeholder="Condition e.g. Like New">
         <input type="number" step="0.01" min="1" name="price" placeholder="Price" required>
     </div>
-    <input type="text" name="image_url" placeholder="Image URL (optional)">
+
+    <input type="text" name="image_url" placeholder="Image URL e.g. images/dress.jpg">
+
     <button type="submit">Publish listing</button>
+
     <a href="user_dashboard.php">Back to dashboard</a>
 </form>
+
 </body>
 </html>
