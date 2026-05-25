@@ -1,132 +1,181 @@
 # ClothingStore Web Application
 
 ## Introduction
-The ClothingStore Web Application is a web-based system developed to manage customer data and basic store operations efficiently. The system provides an administrative interface where an admin can log in and perform various actions such as adding, editing, viewing, and deleting customer records.
+The ClothingStore Web Application is a web-based system developed to manage customer data and a peer-to-peer clothing marketplace. The system provides both user and admin interfaces where users can browse and list clothing items, and administrators can manage customers and listings.
 
-This project was developed as part of an academic assignment to demonstrate understanding of web development concepts, database integration, and CRUD operations.
+This project was developed as part of an academic assignment to demonstrate understanding of web development concepts, database integration, authentication, and CRUD operations.
 
-## Objectives
+### Objectives
 The main objectives of this project are:
-- To develop a functional web application using PHP and MySQL  
-- To implement CRUD (Create, Read, Update, Delete) operations  
-- To manage customer records efficiently  
-- To demonstrate authentication and session management  
-- To design a simple and user-friendly interface  
+To develop a functional web application using PHP and MySQL
+To implement CRUD (Create, Read, Update, Delete) operations
+To build a simple e-commerce-style clothing marketplace
+To demonstrate authentication and session management
+To design a clean and user-friendly interface
 
-## Features
+### Features
+Authentication System
+User login functionality
+Admin login functionality
+Session-based authentication
+Secure access to dashboards
+Logout functionality
+User Marketplace Features
+Browse clothing items
+Filter items by category (Women, Men, Kids Clothes, Accessories, Bags, Shoes)
+Add items to cart
+Save items to wishlist
+Add new clothing listings
+View personal listings
+Admin Dashboard (NEW)
+View total users, listings, cart items, and wishlist items
+View all registered users
+Delete users (including their listings, cart, and wishlist data)
+View all marketplace listings
+Delete inappropriate or unwanted listings
+Navigate between admin panel and marketplace
+Customer Management
+Add new customers
+View all customers
+Edit customer details
+Delete customers
+User Interface
+Clean and modern design
+Consistent styling across all pages
+Responsive layout
+Category-based navigation
+Styled using CSS
+Technologies Used
 
-### Authentication System
-- Admin login functionality  
-- Session-based authentication  
-- Secure access to admin pages  
-- Logout functionality  
+### Frontend:
+HTML
+CSS
 
-### Customer Management
-- Add new customers  
-- View all customers in a table format  
-- Edit existing customer details  
-- Delete customer records  
+### Backend:
+PHP
 
-### User Interface
-- Clean and simple design  
-- Easy navigation between pages  
-- Styled using CSS  
+### Database:
+MySQL
 
-## Technologies Used
+### Development Environment:
+WAMP / XAMPP
+System Architecture
 
-Frontend:
-- HTML  
-- CSS  
+#### The system follows a client-server architecture:
+The client interacts through a web browser
+The server processes requests using PHP
+Data is stored and retrieved from a MySQL database
+Project Structure
 
-Backend:
-- PHP  
-
-Database:
-- MySQL  
-
-Development Environment:
-- XAMPP / WAMP  
-
-## System Architecture
-The system follows a basic client-server architecture:
-- The client interacts through a web browser  
-- The server processes requests using PHP  
-- Data is stored and retrieved from a MySQL database  
-
-## Project Structure
-ClothingStore/  
-├── login.php            # User login page  
-├── admin_login.php      # Admin authentication  
-├── user_dashboard.php   # User dashboard  
-├── customers.php        # Display all customers  
-├── add_customer.php     # Add new customer  
-├── edit_customer.php    # Update customer details  
-├── delete_customer.php  # Delete customer  
-├── DBconn.php           # Database connection  
-├── style.css            # Styling file  
-└── logout.php           # Logout functionality  
+ClothingStore/
+├── login.php
+├── admin_login.php
+├── user_dashboard.php
+├── admin_dashboard.php # NEW admin panel
+├── add_listing.php
+├── my_listings.php
+├── cart.php
+├── wishlist.php
+├── customers.php
+├── add_customer.php
+├── edit_customer.php
+├── delete_customer.php
+├── DBconn.php
+├── bootstrap.php
+├── style.css
+├── logout.php
+└── images/ # product images
 
 ## Database Design
-The system uses a MySQL database to store customer and admin data.
 
 Tables:
+tbladmin
+admin_id
+admin_full_name
+email
+password
+tbluser
+user_id
+full_name
+email
+listings
+listing_id
+user_id
+title
+description
+size
+category
+condition_status
+price
+image_url
+created_at
+cart
+id
+user_id
+listing_id
+quantity
+wishlist
+id
+user_id
+listing_id
+Admin Login Credentials
 
-tbladmin:
-- admin_id  
-- admin_full_name  
-- email  
-- password  
-
-tbluser:
-- user_id  
-- full_name  
-- email  
+### To access the admin dashboard:
+Email:
+admin@gmail.com
+Password:
+admin123
 
 ## Installation and Setup
-To run the project locally:
+Install WAMP or XAMPP
+Place the project folder inside:
+www (WAMP)
+htdocs (XAMPP)
+Start Apache and MySQL
+Open phpMyAdmin
 
-1. Install XAMPP or WAMP server  
-2. Place the project folder inside:
-   - htdocs (XAMPP)  
-   - www (WAMP)  
-3. Start Apache and MySQL from the control panel  
-4. Open phpMyAdmin and create a new database  
-5. Import the SQL file (if provided)  
-6. Update database connection in DBconn.php  
-7. Run the project in your browser:
-   http://localhost/ClothingStore  
+### Create a database named:
+clothingstore
+Import the SQL file (if provided)
+Update database connection in DBconn.php if needed
 
-## How to Use the System
-- Open the application in a browser  
-- Log in using admin credentials  
-- Access the customer management dashboard  
-- Perform actions:
-  - Add customer  
-  - View customers  
-  - Edit customer details  
-  - Delete customers  
-- Log out when done  
+### Run the project:
+http://localhost/ClothingStore
 
-## Challenges Faced
-- Connecting PHP to MySQL database  
-- Handling sessions for login authentication  
-- Debugging SQL errors  
-- Managing file structure and navigation  
+### How to Use the System
+User
+Log in
+Browse clothing items
+Filter by category
+Add items to cart or wishlist
+Add new listings
+Admin
+Log in using admin credentials
+View dashboard statistics
+Manage users
+Manage listings
+Delete unwanted data
+Challenges Faced
+Connecting PHP to MySQL database
+Handling session authentication
+Debugging SQL and PHP errors
+Implementing category filtering
+Managing dynamic UI updates
+Future Improvements
+Add user registration system
+Implement password hashing for security
+Add image upload (instead of URL input)
+Improve search functionality
+Add order/checkout system
+Deploy the system online
+Conclusion
 
-## Future Improvements
-- Add user registration system  
-- Improve UI/UX design  
-- Add search and filter functionality  
-- Implement password encryption  
-- Deploy the system online  
+This project demonstrates the implementation of a full-stack web application with authentication, CRUD operations, and a basic marketplace system. It highlights core web development and database management skills.
 
-## Conclusion
-This project demonstrates the implementation of a basic web application with full CRUD functionality and authentication. It highlights fundamental concepts in web development and database management.
+## Authors
+Name: Thobeka Sithole, Ntokozo Mashiane
+Project: ClothingStore Web Application
+Year: 2026
 
-## Author
-Name: Thobeka Sithole, Ntokozo Mashiane  
-Project: ClothingStore Web Application  
-Year: 2026  
-
-## License
+# License
 This project is for educational purposes only.
