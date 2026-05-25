@@ -77,7 +77,7 @@ function product_image_class($index) {
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="market-body">
-    <div class="announcement">Sustainable Fashion • Extend the Life of Clothing • Shop Consciously</div>
+ 
 
     <header class="market-header">
         <a class="market-logo" href="user_dashboard.php">Recloset</a>
@@ -87,13 +87,38 @@ function product_image_class($index) {
             <input type="text" name="search" placeholder="Search for items, brands, or categories..." value="<?php echo htmlspecialchars($search); ?>">
         </form>
 
-        <nav class="market-icons" aria-label="Account links">
-            <a title="Wishlist" href="wishlist.php">♡<sup><?php echo $wishlistCount; ?></sup></a>
-            <a title="Cart" href="cart.php">▢<sup><?php echo $cartCount; ?></sup></a>
-            <a title="My Listings" href="my_listings.php">♙<sup><?php echo $myListingCount; ?></sup></a>
-            <a title="Logout" href="logout.php">↪</a>
-        </nav>
+    <nav class="market-icons" aria-label="Account links">
+
+    <a title="Browse Products" href="my_listings.php">
+        Browse
+    </a>
+
+    <a title="Wishlist" href="wishlist.php">
+        Wishlist <sup><?php echo $wishlistCount; ?></sup>
+    </a>
+
+    <a title="Cart" href="cart.php">
+        Cart <sup><?php echo $cartCount; ?></sup>
+    </a>
+
+    <a title="Checkout" href="checkout.php">
+        Checkout
+    </a>
+
+    <a title="My Listings" href="my_listings.php">
+        My Listings <sup><?php echo $myListingCount; ?></sup>
+    </a>
+
+    <a title="Logout" href="logout.php">
+        Logout
+    </a>
+
+</nav>
     </header>
+
+       <div class="announcement">Sustainable Fashion • Extend the Life of Clothing • Shop Consciously</div>
+
+
 
 <nav class="category-nav">
     <a href="user_dashboard.php">All</a>
@@ -105,6 +130,9 @@ function product_image_class($index) {
     <a href="user_dashboard.php?category=Shoes">Shoes</a>
     <a class="selling-link" href="add_listing.php">Start Selling</a>
 </nav>
+
+
+
 
     <?php if ($message !== '') { ?>
         <div class="toast-message"><?php echo htmlspecialchars($message); ?></div>
