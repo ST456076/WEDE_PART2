@@ -29,7 +29,7 @@ $result = mysqli_query($conn, $sql);
     </div>
 
     <div class="market-icons">
-        <a href="marketplace.php">Browse</a>
+        <a href="user_dashboard.php">Browse</a>
         <a href="wishlist.php">Wishlist</a>
         <a href="cart.php" style="position: relative;">
             Cart

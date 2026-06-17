@@ -1,25 +1,38 @@
 <?php
 session_start();
-include 'DBConn.php';
+include "DBConn.php";
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+if(isset($_GET['add'])){
+
+    $listing_id = $_GET['add'];
+    $user_id = $_SESSION['user_id'];
+
+    $check = mysqli_query($conn,
+    "SELECT * FROM wishlist 
+     WHERE user_id='$user_id'
+     AND listing_id='$listing_id'");
+
+    if(mysqli_num_rows($check)==0){
+
+        mysqli_query($conn,
+        "INSERT INTO wishlist(user_id, listing_id)
+         VALUES('$user_id','$listing_id')");
+
+    }
+
+    header("Location: wishlist.php");
     exit();
 }
 
 $user_id = $_SESSION['user_id'];
 
-// Fetch wishlist items
-$sql = "SELECT w.wishlist_id, l.listing_id, l.title, l.price, l.image_url, l.size, l.condition_status 
-        FROM wishlist w 
-        JOIN listings l ON w.listing_id = l.listing_id 
-        WHERE w.user_id = ? 
-        ORDER BY w.created_at DESC";
+$sql = "SELECT wishlist.wishlist_id, listings.*
+        FROM wishlist
+        INNER JOIN listings 
+        ON wishlist.listing_id = listings.listing_id
+        WHERE wishlist.user_id='$user_id'";
 
-$stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
+$result = mysqli_query($conn,$sql);
 ?>
 
 <!DOCTYPE html>
@@ -166,11 +179,16 @@ $result = mysqli_stmt_get_result($stmt);
                     </div>
                 <?php endwhile; ?>
             </div>
-        <?php else: ?>
+                    <?php else: ?>
             <div class="empty-state">
                 <h2>Your wishlist is empty</h2>
                 <p>Start saving items you love </p>
-                <a href="user_dashboard.php" class="green-btn">Browse Items</a>
+                
+                <!-- Button 1 -->
+                <a href="user_dashboard.php" class="green-btn" style="margin: 8px;">Browse Items</a>
+                
+                <!-- Button 2 -->
+                <a href="user_dashboard.php" class="green-btn" style="margin: 8px; background: #6f6b63;">Back to Dashboard</a>
             </div>
         <?php endif; ?>
     </div>
