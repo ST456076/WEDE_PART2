@@ -62,12 +62,8 @@ $cartCount = get_cart_count($conn, $userId);
 $wishlistCount = get_wishlist_count($conn, $userId);
 $myListingCount = get_listing_count($conn, $userId);
 $totalItems = mysqli_num_rows($listings);
-
-function product_image_class($index) {
-    $classes = ['shirt-card', 'jeans-card', 'jacket-card', 'hoodie-card', 'dress-card', 'accessory-card'];
-    return $classes[$index % count($classes)];
-}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,91 +73,66 @@ function product_image_class($index) {
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="market-body">
- 
+
+    <!-- Announcement + Header + Category Nav (same as before) -->
+    <div class="announcement">Sustainable Fashion • Extend the Life of Clothing • Shop Consciously</div>
 
     <header class="market-header">
         <a class="market-logo" href="user_dashboard.php">Recloset</a>
-
         <form class="market-search" method="GET" action="user_dashboard.php">
             <span>⌕</span>
-            <input type="text" name="search" placeholder="Search for items, brands, or categories..." value="<?php echo htmlspecialchars($search); ?>">
+            <input type="text" name="search" placeholder="Search for items..." value="<?php echo htmlspecialchars($search ?? ''); ?>">
         </form>
-
-    <nav class="market-icons" aria-label="Account links">
-
-    <a title="Browse Products" href="my_listings.php">
-        Browse
-    </a>
-
-    <a title="Wishlist" href="wishlist.php">
-        Wishlist <sup><?php echo $wishlistCount; ?></sup>
-    </a>
-
-    <a title="Cart" href="cart.php">
-        Cart <sup><?php echo $cartCount; ?></sup>
-    </a>
-
-    <a title="Checkout" href="checkout.php">
-        Checkout
-    </a>
-
-    <a title="My Listings" href="my_listings.php">
-        My Listings <sup><?php echo $myListingCount; ?></sup>
-    </a>
-
-    <a title="Logout" href="logout.php">
-        Logout
-    </a>
-
-</nav>
+        <nav class="market-icons">
+            <a href="my_listings.php">Browse</a>
+            <a href="wishlist.php">Wishlist <sup><?php echo $wishlistCount; ?></sup></a>
+            <a href="cart.php">Cart <sup><?php echo $cartCount; ?></sup></a>
+            <a href="my_listings.php">My Listings <sup><?php echo $myListingCount; ?></sup></a>
+            <a href="logout.php">Logout</a>
+        </nav>
     </header>
 
-       <div class="announcement">Sustainable Fashion • Extend the Life of Clothing • Shop Consciously</div>
+    <nav class="category-nav">
+        <a href="user_dashboard.php">All</a>
+        <a href="user_dashboard.php?category=Women">Women</a>
+        <a href="user_dashboard.php?category=Men">Men</a>
+        <a href="user_dashboard.php?category=Kids Clothes">Kids Clothes</a>
+        <a href="user_dashboard.php?category=Accessories">Accessories</a>
+        <a href="user_dashboard.php?category=Bags">Bags</a>
+        <a href="user_dashboard.php?category=Shoes">Shoes</a>
+        <a class="selling-link" href="add_listing.php">Start Selling</a>
+    </nav>
 
-
-
-<nav class="category-nav">
-    <a href="user_dashboard.php">All</a>
-    <a href="user_dashboard.php?category=Women">Women</a>
-    <a href="user_dashboard.php?category=Men">Men</a>
-    <a href="user_dashboard.php?category=Kids Clothes">Kids Clothes</a>
-    <a href="user_dashboard.php?category=Accessories">Accessories</a>
-    <a href="user_dashboard.php?category=Bags">Bags</a>
-    <a href="user_dashboard.php?category=Shoes">Shoes</a>
-    <a class="selling-link" href="add_listing.php">Start Selling</a>
-</nav>
-
-
-
-
-    <?php if ($message !== '') { ?>
-        <div class="toast-message"><?php echo htmlspecialchars($message); ?></div>
-    <?php } ?>
-
-    
+    <!-- Hero Section -->
     <section class="market-hero">
         <div class="hero-copy">
             <p class="small-label">Welcome, <?php echo htmlspecialchars($userName); ?></p>
             <h1>Buy and sell pre-loved fashion beautifully.</h1>
-            <p>Give clothing a second life. Browse sustainable pieces, save your favourites, add to cart, or list your own items in minutes.</p>
-           <div class="hero-buttons">
-                <a class="green-btn" href="#products">Shop Now <span>→</span></a>
+            <p>Give clothing a second life. Browse sustainable pieces...</p>
+            <div class="hero-buttons">
+                <a class="green-btn" href="#products">Shop Now →</a>
                 <a class="outline-green-btn" href="add_listing.php">Start Selling</a>
             </div>
         </div>
     </section>
 
     <main class="market-main" id="products">
+
+    <!-- Featured Section -->
+    <section class="featured-section">
         <div class="section-heading">
             <div>
                 <p class="small-label">Featured finds</p>
                 <h2>Fresh from the closet</h2>
             </div>
+            
+            <!-- Category Filter -->
             <form class="category-filter" method="GET">
                 <select name="category" onchange="this.form.submit()">
                     <option value="">All Products</option>
                     <?php while ($cat = mysqli_fetch_assoc($categories)) { ?>
-                        <option value="<?php echo htmlspecialchars($cat['category']); ?>" <?php echo $category === $cat['category'] ? 'selected' : ''; ?>>
+                        <option value="<?php echo htmlspecialchars($cat['category']); ?>" 
+                                <?php echo $category === $cat['category'] ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars($cat['category']); ?>
                         </option>
                     <?php } ?>
@@ -169,71 +140,76 @@ function product_image_class($index) {
             </form>
         </div>
 
+        <!-- Product Grid -->
         <section class="product-grid">
-            <?php if ($totalItems === 0) { ?>
+            <?php if (mysqli_num_rows($listings) === 0) { ?>
                 <div class="empty-market">
                     <h3>No products yet</h3>
                     <p>Add your first listing so the dashboard has items to display.</p>
                     <a class="green-btn" href="add_listing.php">Create Listing</a>
                 </div>
+            <?php } else { ?>
+                <?php while ($item = mysqli_fetch_assoc($listings)) { ?>
+                    <article class="product-card">
+                        <div class="product-image">
+                            <span class="condition-badge">
+                                <?php echo htmlspecialchars($item['condition_status'] ?? 'Good'); ?>
+                            </span>
+                            
+                            <?php if (!empty($item['image_url'])): ?>
+                                <img src="<?php echo htmlspecialchars($item['image_url']); ?>" 
+                                     alt="<?php echo htmlspecialchars($item['title']); ?>">
+                            <?php else: ?>
+                                <div class="placeholder-image">
+                                    <?= strtoupper(substr($item['title'], 0, 1)) ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="product-info">
+                            <div class="product-title-row">
+                                <h3><?php echo htmlspecialchars($item['title']); ?></h3>
+                                <span><?php echo htmlspecialchars($item['size'] ?? ''); ?></span>
+                            </div>
+                            
+                            <p class="brand-name">
+                                <?php echo htmlspecialchars($item['seller_name'] ?? 'Recloset Seller'); ?>
+                            </p>
+                            
+                            <div class="price-row">
+                                R<?php echo number_format($item['price'], 2); ?>
+                            </div>
+
+                            <div class="product-actions">
+                                <form method="POST">
+                                    <input type="hidden" name="listing_id" value="<?php echo $item['listing_id']; ?>">
+                                    <input type="hidden" name="action" value="add_wishlist">
+                                    <button type="submit" class="save-button">♡ Save</button>
+                                </form>
+                                <form method="POST">
+                                    <input type="hidden" name="listing_id" value="<?php echo $item['listing_id']; ?>">
+                                    <input type="hidden" name="action" value="add_cart">
+                                    <button type="submit" class="green-btn">Add to Cart</button>
+                                </form>
+                            </div>
+                        </div>
+                    </article>
+                <?php } ?>
             <?php } ?>
-
-            <?php $i = 0; while ($item = mysqli_fetch_assoc($listings)) { ?>
-                <article class="product-card">
-                    <div class="product-image <?php echo product_image_class($i); ?>">
-                        <span class="condition-badge"><?php echo htmlspecialchars($item['condition_status'] ?? 'Good'); ?></span>
-                        <?php if (!empty($item['image_url'])) { ?>
-                            <img src="<?php echo htmlspecialchars($item['image_url']); ?>" alt="<?php echo htmlspecialchars($item['title']); ?>">
-                        <?php } else { ?>
-                            <div class="cloth-illustration"><?php echo strtoupper(substr($item['title'], 0, 1)); ?></div>
-                        <?php } ?>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-title-row">
-                            <h3><?php echo htmlspecialchars($item['title']); ?></h3>
-                            <span>Size <?php echo htmlspecialchars($item['size'] ?? 'N/A'); ?></span>
-                        </div>
-                        <p class="brand-name"><?php echo htmlspecialchars($item['brand'] ?? $item['seller_name'] ?? 'Recloset Seller'); ?></p>
-                        <div class="price-row">
-                            <strong>R<?php echo number_format((float)$item['price'], 2); ?></strong>
-                        </div>
-                        <div class="tag-row">
-                            <span><?php echo htmlspecialchars($item['category'] ?? 'clothing'); ?></span>
-                            <span>sustainable</span>
-                        </div>
-                        <div class="product-actions">
-                            <form method="POST" action="user_dashboard.php">
-                                <input type="hidden" name="listing_id" value="<?php echo (int)$item['listing_id']; ?>">
-                                <input type="hidden" name="action" value="add_wishlist">
-                                <button class="save-button" type="submit">♡ Save</button>
-                            </form>
-                            <form method="POST" action="user_dashboard.php">
-                                <input type="hidden" name="listing_id" value="<?php echo (int)$item['listing_id']; ?>">
-                                <input type="hidden" name="action" value="add_cart">
-                                <button class="cart-button" type="submit">Add to Cart</button>
-                            </form>
-                        </div>
-                    </div>
-                </article>
-            <?php $i++; } ?>
         </section>
-
-        <div class="view-all-row"><a href="user_dashboard.php">View All Products <span>→</span></a></div>
-    </main>
-
-    <section class="seller-cta">
-        <h2>Ready to Start Your Sustainable Journey?</h2>
-        <p>Join conscious shoppers and sellers making a difference, one garment at a time.</p>
-        <a href="add_listing.php">Create Free Listing</a>
     </section>
 
+</main>
+
+    <!-- NEW FOOTER -->
     <footer class="market-footer">
         <div>
             <h3>Recloset</h3>
-            <p>Sustainable peer-to-peer clothing marketplace.</p>
+            <p>Sustainable peer-to-peer clothing marketplace.<br>Making fashion circular.</p>
         </div>
         <div>
             <h4>Shop</h4>
+            <a href="user_dashboard.php">All Products</a>
             <a href="wishlist.php">Wishlist</a>
             <a href="cart.php">Cart</a>
         </div>
@@ -243,9 +219,17 @@ function product_image_class($index) {
             <a href="my_listings.php">My Listings</a>
         </div>
         <div>
-            <h4>Account</h4>
-            <a href="logout.php">Logout</a>
+            <h4>Support</h4>
+            <a href="#">Contact Us</a>
+            <a href="#">Shipping</a>
+            <a href="#">Returns</a>
+        </div>
+        <div>
+            <h4>Legal</h4>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
         </div>
     </footer>
+
 </body>
 </html>
