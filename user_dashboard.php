@@ -13,6 +13,43 @@ if (!isset($_SESSION['user_id'])) {
 $userId = (int)$_SESSION['user_id'];
 $userName = $_SESSION['user_name'] ?? 'Customer';
 
+/* ================= ADD TO CART ================= */
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $listing_id = (int)($_POST['listing_id'] ?? 0);
+    $action = $_POST['action'] ?? '';
+
+    if ($action == "add_cart") {
+
+        // Check if item already exists in cart
+        $check = mysqli_query($conn,
+            "SELECT * FROM cart
+             WHERE user_id='$userId'
+             AND listing_id='$listing_id'");
+
+        if(mysqli_num_rows($check) > 0)
+        {
+            // Increase quantity
+            mysqli_query($conn,
+                "UPDATE cart
+                 SET quantity = quantity + 1
+                 WHERE user_id='$userId'
+                 AND listing_id='$listing_id'");
+        }
+        else
+        {
+            // Add new item
+            mysqli_query($conn,
+                "INSERT INTO cart(user_id, listing_id, quantity)
+                 VALUES('$userId','$listing_id',1)");
+        }
+
+        header("Location: cart.php");
+        exit();
+    }
+}
+
 // Get search and category filters from URL
 $search = trim($_GET['search'] ?? '');
 $category = trim($_GET['category'] ?? '');
@@ -305,12 +342,12 @@ Start Selling
                             </div>
 
                             <div class="product-actions">
-                                <form method="POST" style="display:inline;">
+                               <form method="POST" action="user_dashboard.php" style="display:inline;">
                                     <input type="hidden" name="listing_id" value="<?php echo $item['listing_id']; ?>">
                                     <input type="hidden" name="action" value="add_wishlist">
                                     <button type="submit" class="save-button">♡ Save</button>
                                 </form>
-                                <form method="POST" style="display:inline;">
+                                <form method="POST" action="user_dashboard.php" style="display:inline;">
                                     <input type="hidden" name="listing_id" value="<?php echo $item['listing_id']; ?>">
                                     <input type="hidden" name="action" value="add_cart">
                                     <button type="submit" class="green-btn">Add to Cart</button>

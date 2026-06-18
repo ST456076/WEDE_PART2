@@ -628,38 +628,158 @@ form.auth-card {
    CHECKOUT PAGE
 ========================================================= */
 
-.checkout-container {
-  max-width: 1100px;
-  margin: 40px auto;
-  padding: 0 52px;
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: 60px;
+.checkout-container{
+    min-height:80vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:60px 20px;
+    background:var(--cream);
 }
 
-.checkout-form h2, .order-summary h2 {
-  color: var(--green-dk);
-  margin-bottom: 24px;
+.checkout-success-card{
+    width:100%;
+    max-width:600px;
+    background:var(--white);
+    padding:50px;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    text-align:center;
 }
 
-.form-group {
-  margin-bottom: 20px;
+.success-icon{
+    width:90px;
+    height:90px;
+    margin:0 auto 25px;
+    border-radius:50%;
+    background:var(--green);
+    color:white;
+    font-size:48px;
+    font-weight:bold;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
-.checkout-form input, .checkout-form select {
-  margin: 0;
+.checkout-success-card h1{
+    color:var(--green-dk);
+    margin-bottom:15px;
 }
 
-.order-summary {
-  background: var(--white);
-  padding: 32px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  height: fit-content;
-  position: sticky;
-  top: 100px;
+.success-text{
+    color:#666;
+    margin-bottom:30px;
+    line-height:1.6;
 }
 
+.order-box{
+    background:var(--cream);
+    padding:25px;
+    border-radius:var(--radius);
+    margin-bottom:30px;
+}
+
+.order-box span{
+    display:block;
+    color:#777;
+    margin-bottom:8px;
+    font-size:14px;
+}
+
+.order-box h2{
+    color:var(--green);
+    margin:0;
+    font-size:32px;
+}
+
+.small-text{
+    color:#666;
+    line-height:1.6;
+    margin-bottom:35px;
+}
+
+.checkout-buttons{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.secondary-btn{
+    background:var(--green-dk);
+}
+
+.secondary-btn:hover{
+    background:var(--green);
+}
+
+/* ==========================
+   ORDER SUCCESS PAGE FIX
+========================== */
+
+.checkout-container{
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    background: var(--cream);
+}
+
+.checkout-success-card{
+    width: 100%;
+    max-width: 520px;
+    background: var(--white);
+    padding: 45px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.success-icon{
+    width: 85px;
+    height: 85px;
+    margin: 0 auto 20px;
+    background: var(--green);
+    color: white;
+    font-size: 42px;
+    font-weight: 800;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkout-success-card h1{
+    color: var(--green-dk);
+    margin-bottom: 10px;
+}
+
+.success-text{
+    color: #6f6b63;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.order-box{
+    background: var(--cream);
+    padding: 20px;
+    border-radius: var(--radius);
+    margin-bottom: 30px;
+}
+
+.order-box span{
+    display:block;
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.order-box h2{
+    margin: 0;
+    color: var(--green);
+    font-size: 28px;
+}
 /* =========================================================
    MY LISTINGS PAGE
 ========================================================= */

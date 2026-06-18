@@ -12,9 +12,7 @@ $user_id = $_SESSION['user_id'];
 $sql = "SELECT cart.cart_id,
                cart.quantity,
                listings.listing_id,
-               listings.title,
-               listings.price,
-               listings.quantity AS stock_quantity
+               listings.price
         FROM cart
         INNER JOIN listings
         ON cart.listing_id = listings.listing_id
@@ -22,135 +20,99 @@ $sql = "SELECT cart.cart_id,
 
 $result = mysqli_query($conn, $sql);
 
-$total = 0;
 $cart_items = [];
+$total = 0;
 
-while($row = mysqli_fetch_assoc($result))
-{
-    $subtotal = $row['price'] * $row['quantity'];
-    $total += $subtotal;
-
+while($row = mysqli_fetch_assoc($result)){
+    $total += $row['price'] * $row['quantity'];
     $cart_items[] = $row;
 }
 
-if(empty($cart_items))
-{
-    die("Your cart is empty.");
+if(empty($cart_items)){
+    echo "Cart empty";
+    exit();
 }
 
-$insert_order = "INSERT INTO tblorder(user_id, total_amount, order_status)
-                 VALUES('$user_id', '$total', 'Pending')";
-
-mysqli_query($conn, $insert_order);
+// create order
+mysqli_query($conn,
+"INSERT INTO tblorder(user_id,total_amount,order_status)
+VALUES('$user_id','$total','Pending')");
 
 $order_id = mysqli_insert_id($conn);
 
-foreach($cart_items as $item)
-{
-    $listing_id = $item['listing_id'];
-    $quantity = $item['quantity'];
-    $price = $item['price'];
+// order lines + stock update
+foreach($cart_items as $item){
+    mysqli_query($conn,
+    "INSERT INTO orderLine(order_id,listing_id,quantity,price)
+    VALUES('$order_id',
+           '{$item['listing_id']}',
+           '{$item['quantity']}',
+           '{$item['price']}')");
 
-    // Insert into orderLine
-    $insert_line = "INSERT INTO orderLine(order_id, listing_id, quantity, price)
-                    VALUES('$order_id', '$listing_id', '$quantity', '$price')";
-
-    mysqli_query($conn, $insert_line);
-
-    // Decrease stock quantity
-    $update_stock = "UPDATE listings
-                     SET quantity = quantity - $quantity
-                     WHERE listing_id = '$listing_id'";
-
-    mysqli_query($conn, $update_stock);
+    mysqli_query($conn,
+    "UPDATE listings
+     SET quantity = quantity - {$item['quantity']}
+     WHERE listing_id='{$item['listing_id']}'");
 }
 
-// Empty cart after checkout
-mysqli_query($conn,
-"DELETE FROM cart WHERE user_id='$user_id'");
+// clear cart
+mysqli_query($conn,"DELETE FROM cart WHERE user_id='$user_id'");
+
+// save order id
+$_SESSION['last_order_id'] = $order_id;
+
+// redirect ONLY
+header("Location: order_success.php");
+exit();
 ?>
 
+//checkout html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Checkout Complete</title>
-
-    <link rel="stylesheet" href="style.css">
-
-    <style>
-
-        body{
-            font-family: Arial;
-            background:#f5f5f5;
-            margin:0;
-            padding:0;
-        }
-
-        .checkout-container{
-            width:500px;
-            margin:80px auto;
-            background:white;
-            padding:40px;
-            border-radius:10px;
-            text-align:center;
-            box-shadow:0px 0px 10px rgba(0,0,0,0.1);
-        }
-
-        .success{
-            color:green;
-            font-size:28px;
-            margin-bottom:20px;
-        }
-
-        .order-ref{
-            background:#f2f2f2;
-            padding:15px;
-            border-radius:8px;
-            margin:20px 0;
-            font-size:18px;
-        }
-
-        .btn{
-            display:inline-block;
-            margin:10px;
-            padding:12px 20px;
-            text-decoration:none;
-            background:black;
-            color:white;
-            border-radius:5px;
-        }
-
-    </style>
+    <meta charset="UTF-8">
+    <title>Order Complete</title>
+    <link rel="stylesheet" href="code.css">
 </head>
 
 <body>
 
 <div class="checkout-container">
 
-    <div class="success">
-        Order Successful
+    <div class="checkout-success-card">
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+        <h1>Order Successful!</h1>
+
+        <p class="success-text">
+            Thank you for shopping with us.
+            Your order has been placed successfully.
+        </p>
+
+        <div class="order-box">
+            <span>Reference Number</span>
+            <h2>#<?php echo $order_id; ?></h2>
+        </div>
+
+        <p class="small-text">
+            Your payment has been received and your cart has been cleared.
+            You can continue browsing more products below.
+        </p>
+
+        <div class="checkout-buttons">
+            <a href="my_listings.php" class="btn">
+                Continue Shopping
+            </a>
+
+            <a href="logout.php" class="btn secondary-btn">
+                Return to Login
+            </a>
+        </div>
+
     </div>
-
-    <p>
-        Thank you for your purchase.
-    </p>
-
-    <div class="order-ref">
-        Reference Number:
-        <strong>#<?php echo $order_id; ?></strong>
-    </div>
-
-    <p>
-        Your order has been placed successfully and your cart has been cleared.
-    </p>
-
-    <a href="my_listings.php" class="btn">
-        Continue Shopping
-    </a>
-
-    <a href="logout.php" class="btn">
-        Return to Login
-    </a>
 
 </div>
 
