@@ -1,9 +1,59 @@
 <?php
+// START SESSION AND CONNECT TO DATABASE
 session_start();
+
+// CONNECT TO DATABASE
+
 include 'DBConn.php';
 
-$sql = "SELECT * FROM listings ORDER BY created_at DESC";
-$result = mysqli_query($conn, $sql);
+
+// CHECK IF USER IS LOGGED IN
+// If not logged in → block access
+
+if (!isset($_SESSION['user_id'])) {
+    die("Access denied. Please log in.");
+}
+
+// Get logged-in user ID
+$userId = (int)$_SESSION['user_id'];
+
+
+//DELETE LISTING (ONLY OWN LISTINGS)
+
+if (isset($_GET['delete'])) {
+
+    // Get listing ID from URL
+    $listingId = (int)$_GET['delete'];
+
+    // Use prepared statement for security
+    $stmt = $conn->prepare("
+        DELETE FROM listings
+        WHERE listing_id = ?
+        AND user_id = ?
+    ");
+
+    $stmt->bind_param("ii", $listingId, $userId);
+    $stmt->execute();
+    $stmt->close();
+
+    // Redirect back to same page after delete
+    header("Location: my_listings.php");
+    exit();
+}
+
+
+//FETCH USER LISTINGS
+
+$stmt = $conn->prepare("
+    SELECT * 
+    FROM listings
+    WHERE user_id = ?
+    ORDER BY created_at DESC
+");
+
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -12,82 +62,115 @@ $result = mysqli_query($conn, $sql);
     <title>My Listings</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-<!--Navigation Bar-->
-<!-- Announcement Bar -->
-<div class="announcement">
-    Sustainable Fashion • Extend the Life of Clothing • Shop Consciously
-</div>
+<body class="dashboard-body">
 
-<!-- Main Header -->
-<header class="market-header">
-    <div class="market-logo">Recloset</div>
-    
-    <div class="market-search">
-        <input type="text" placeholder="Search for items, brands, or categories...">
-    </div>
+<div class="simple-page">
 
-    <div class="market-icons">
-        <a href="user_dashboard.php">Browse</a>
-        <a href="wishlist.php">Wishlist</a>
-        <a href="cart.php" style="position: relative;">
-            Cart
-            <?php if(isset($_SESSION['cart_count']) && $_SESSION['cart_count'] > 0): ?>
-                <sup><?= $_SESSION['cart_count'] ?></sup>
-            <?php endif; ?>
+    <a href="user_dashboard.php">
+        ← Back to Marketplace
+    </a>
+
+    <h2>My Clothing Listings</h2>
+
+    <p class="muted">
+        Manage all clothing items you have listed for sale.
+    </p>
+
+    <div style="margin-bottom:20px;">
+        <a href="add_listing.php" class="green-btn">
+            + Add New Listing
         </a>
-        <a href="my_listings.php">My Listings</a>
-        <a href="logout.php">Logout</a>
-    </div>
-</header>
-
-
-<h1>My Listings</h1>
-
-<div class="my-listings-grid">
-
-<?php while($row = mysqli_fetch_assoc($result)) { ?>
-
-<div class="my-listing-card">
-
-    <img src="<?php echo $row['image_url']; ?>" class="listing-image" alt="Listing Image">
-
-    <div class="listing-info">
-
-        <h3><?php echo $row['title']; ?></h3>
-
-        <p>Category: <?php echo $row['category']; ?></p>
-
-        <p>Size: <?php echo $row['size']; ?></p>
-
-        <p>Condition: <?php echo $row['condition_status']; ?></p>
-
-        <p><strong>R<?php echo $row['price']; ?></strong></p>
-
- <div class="listing-actions">
-
-    <a href="cart.php?add=<?php echo $row['listing_id']; ?>" class="listing-btn cart-btn">
-        Add to Cart
-    </a>
-
-    <a href="wishlist.php?add=<?php echo $row['listing_id']; ?>" class="listing-btn wishlist-btn">
-        Wishlist
-    </a>
-
-</div>
     </div>
 
+    <?php if ($result->num_rows > 0) { ?>
+
+        <?php while ($row = $result->fetch_assoc()) { ?>
+
+            <div class="list-row">
+
+                <div style="display:flex; gap:18px; align-items:center;">
+
+                    <img
+                        src="<?php echo htmlspecialchars($row['image_url']); ?>"
+                        alt="Listing Image"
+                        style="
+                            width:120px;
+                            height:120px;
+                            object-fit:cover;
+                            border-radius:12px;
+                            border:1px solid #393938;
+                        "
+                    >
+
+                    <div>
+
+                        <h3 style="margin:0;">
+                            <?php echo htmlspecialchars($row['title']); ?>
+                        </h3>
+
+                        <p>
+                            Category:
+                            <?php echo htmlspecialchars($row['category']); ?>
+                        </p>
+
+                        <p>
+                            Size:
+                            <?php echo htmlspecialchars($row['size']); ?>
+                        </p>
+
+                        <p>
+                            <strong>
+                                R<?php echo htmlspecialchars($row['price']); ?>
+                            </strong>
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+
+                    <a
+                        href="edit_listing.php?id=<?php echo $row['listing_id']; ?>"
+                        class="outline-green-btn"
+                    >
+                        Edit
+                    </a>
+
+                    <a
+                        href="my_listings.php?delete=<?php echo $row['listing_id']; ?>"
+                        class="danger-btn"
+                        onclick="return confirm('Are you sure you want to delete this listing?')"
+                    >
+                        Delete
+                    </a>
+
+                </div>
+
+            </div>
+
+        <?php } ?>
+
+    <?php } else { ?>
+
+        <div class="empty-market">
+
+            <h3>No Listings Found</h3>
+
+            <p>
+                You have not added any clothing items yet.
+            </p>
+
+            <a href="add_listing.php" class="green-btn">
+                Add Your First Listing
+            </a>
+
+        </div>
+
+    <?php } ?>
+
 </div>
 
-
-
-<?php } ?>
-
-</div>
-
-<div style="margin-top: 30px;">
-    <a href="user_dashboard.php" class="back-dashboard">
-        ← Back to Dashboard
-    </a>
-</div>
+</body>
+</html>
