@@ -1,7 +1,8 @@
 <?php
 session_start();
-include 'DBConn.php';
+include "DBConn.php";
 
+// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -9,108 +10,113 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-$sql = "SELECT cart.cart_id,
-               cart.quantity,
-               listings.listing_id,
-               listings.price
-        FROM cart
-        INNER JOIN listings
-        ON cart.listing_id = listings.listing_id
-        WHERE cart.user_id='$user_id'";
+// Generate reference number
+$orderReference = "ORD" . time();
+$sessionId = session_id();
 
-$result = mysqli_query($conn, $sql);
+// Get all cart items
+$cartQuery = mysqli_query($conn, "
+SELECT cart.*, listings.price
+FROM cart
+JOIN listings ON cart.listing_id = listings.listing_id
+WHERE cart.user_id = '$user_id'
+");
 
-$cart_items = [];
-$total = 0;
-
-while($row = mysqli_fetch_assoc($result)){
-    $total += $row['price'] * $row['quantity'];
-    $cart_items[] = $row;
+if (mysqli_num_rows($cartQuery) == 0) {
+    die("Your cart is empty.");
 }
 
-if(empty($cart_items)){
-    echo "Cart empty";
-    exit();
+$totalAmount = 0;
+$cartItems = [];
+
+while ($item = mysqli_fetch_assoc($cartQuery)) {
+    $item["subtotal"] = $item["price"] * $item["quantity"];
+    $totalAmount += $item["subtotal"];
+    $cartItems[] = $item;
 }
 
-// create order
-mysqli_query($conn,
-"INSERT INTO tblorder(user_id,total_amount,order_status)
-VALUES('$user_id','$total','Pending')");
+// Create order
+mysqli_query($conn, "
+INSERT INTO tblorder
+(user_id, total_amount, order_status)
+VALUES
+('$user_id', '$totalAmount', 'Completed')
+");
 
 $order_id = mysqli_insert_id($conn);
 
-// order lines + stock update
-foreach($cart_items as $item){
-    mysqli_query($conn,
-    "INSERT INTO orderLine(order_id,listing_id,quantity,price)
-    VALUES('$order_id',
-           '{$item['listing_id']}',
-           '{$item['quantity']}',
-           '{$item['price']}')");
+// Save each item into orderline and reduce stock
+foreach ($cartItems as $item) {
 
-    mysqli_query($conn,
-    "UPDATE listings
-     SET quantity = quantity - {$item['quantity']}
-     WHERE listing_id='{$item['listing_id']}'");
+    $listing_id = $item['listing_id'];
+    $qty = $item['quantity'];
+    $price = $item['price'];
+
+    // Insert into orderline
+    mysqli_query($conn, "
+    INSERT INTO orderline
+    (order_id, listing_id, quantity, price)
+    VALUES
+    ('$order_id', '$listing_id', '$qty', '$price')
+    ");
+
+    // Reduce stock
+    mysqli_query($conn, "
+    UPDATE listings
+    SET quantity = quantity - $qty
+    WHERE listing_id = '$listing_id'
+    ");
 }
 
-// clear cart
-mysqli_query($conn,"DELETE FROM cart WHERE user_id='$user_id'");
-
-// save order id
-$_SESSION['last_order_id'] = $order_id;
-
-// redirect ONLY
-header("Location: order_success.php");
-exit();
+// Empty cart
+mysqli_query($conn, "
+DELETE FROM cart
+WHERE user_id = '$user_id'
+");
 ?>
-
-//checkout html
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Order Complete</title>
-    <link rel="stylesheet" href="code.css">
+    <title>Order Successful</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <div class="checkout-container">
 
-    <div class="checkout-success-card">
+    <div class="success-icon">✓</div>
 
-        <div class="success-icon">
-            ✓
-        </div>
+    <h1>Order Confirmed!</h1>
 
-        <h1>Order Successful!</h1>
+    <p class="thank-you">
+        Thank you for shopping with <strong>ReCloset</strong> 
+        <br>
+        Your order has been placed successfully.
+    </p>
 
-        <p class="success-text">
-            Thank you for shopping with us.
-            Your order has been placed successfully.
-        </p>
+    <div class="order-details">
 
-        <div class="order-box">
+        <div class="detail">
             <span>Reference Number</span>
-            <h2>#<?php echo $order_id; ?></h2>
+            <strong><?php echo $orderReference; ?></strong>
         </div>
 
-        <p class="small-text">
-            Your payment has been received and your cart has been cleared.
-            You can continue browsing more products below.
-        </p>
-
-        <div class="checkout-buttons">
-            <a href="my_listings.php" class="btn">
-                Continue Shopping
-            </a>
-
-            <a href="logout.php" class="btn secondary-btn">
-                Return to Login
-            </a>
+        <div class="detail">
+            <span>Session ID</span>
+            <strong><?php echo session_id(); ?></strong>
         </div>
+
+    </div>
+
+    <div class="checkout-buttons">
+
+        <a href="user_dashboard.php" class="checkout-btn">
+            Continue Shopping
+        </a>
+
+        <a href="logout.php" class="checkout-btn secondary">
+            Logout
+        </a>
 
     </div>
 
