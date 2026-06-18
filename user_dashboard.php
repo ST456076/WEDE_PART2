@@ -1,8 +1,44 @@
+
+
 <?php
 // Start session and include necessary files
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+
 session_start();
 include "DBConn.php";
 include "bootstrap.php";
+
+
+/* ================= FIX MISSING FUNCTIONS (SAFEGUARD) ================= */
+
+if (!function_exists('get_cart_count')) {
+    function get_cart_count($conn, $userId) {
+        $result = mysqli_query($conn,
+            "SELECT SUM(quantity) AS total FROM cart WHERE user_id = '$userId'");
+        $row = mysqli_fetch_assoc($result);
+        return $row['total'] ?? 0;
+    }
+}
+
+if (!function_exists('get_wishlist_count')) {
+    function get_wishlist_count($conn, $userId) {
+        $result = mysqli_query($conn,
+            "SELECT COUNT(*) AS total FROM wishlist WHERE user_id = '$userId'");
+        $row = mysqli_fetch_assoc($result);
+        return $row['total'] ?? 0;
+    }
+}
+
+if (!function_exists('get_listing_count')) {
+    function get_listing_count($conn, $userId) {
+        $result = mysqli_query($conn,
+            "SELECT COUNT(*) AS total FROM listings WHERE user_id = '$userId'");
+        $row = mysqli_fetch_assoc($result);
+        return $row['total'] ?? 0;
+    }
+}
 
 // Security: Redirect to login if user is not logged in
 if (!isset($_SESSION['user_id'])) {
@@ -359,6 +395,8 @@ Start Selling
             <?php endif; ?>
         </div>
     </section>
+
+
 
     <!-- Footer -->
     <footer class="market-footer">

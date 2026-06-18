@@ -8,6 +8,9 @@ include "DBConn.php";
 // Handle login
 if (isset($_POST['login'])) {
 
+$_SESSION['user_id'] = $user['id'];
+unset($_SESSION['admin_id']);
+
     // Get input values
     $email = trim($_POST['email']);
     $password = $_POST['password'];

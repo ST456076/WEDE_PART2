@@ -6,6 +6,9 @@ if (isset($_POST['login'])) {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
 
+    $_SESSION['admin_id'] = $admin['id'];
+unset($_SESSION['user_id']);
+
     $stmt = mysqli_prepare($conn, "SELECT * FROM tbladmin WHERE email = ?");
     mysqli_stmt_bind_param($stmt, "s", $email);
     mysqli_stmt_execute($stmt);
