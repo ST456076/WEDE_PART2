@@ -35,23 +35,44 @@ if (isset($_POST['login'])) {
     <title>Admin Login</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="auth-body">
 
-<form class="auth-card" method="POST">
-    <h2>Admin Login</h2>
-    <p class="muted">Use your admin account to manage users and listings.</p>
+<body>
 
-    <?php if (isset($error)) { ?>
-        <div class="error"><?php echo htmlspecialchars($error); ?></div>
-    <?php } ?>
+<div class="login-wrapper">
 
-    <input type="email" name="email" placeholder="Admin email" required>
-    <input type="password" name="password" placeholder="Admin password" required>
+    <!-- LEFT SIDE IMAGE -->
+    <div class="login-left">
+        <img src="images/recloset-logo.jpg" alt="Admin Login" class="login-logo">
+    </div>
 
-    <button type="submit" name="login">Login as Admin</button>
+    <!-- RIGHT SIDE FORM -->
+    <div class="login-right">
 
-    <a href="login.php">Back to User Login</a>
-</form>
+        <form class="auth-card" method="POST">
+
+            <h2>Admin Login</h2>
+            <p class="muted">Use your admin account to manage the system.</p>
+
+            <?php if (isset($error)) { ?>
+                <div class="error">
+                    <?php echo htmlspecialchars($error); ?>
+                </div>
+            <?php } ?>
+
+            <input type="email" name="email" placeholder="Admin email" required>
+            <input type="password" name="password" placeholder="Admin password" required>
+
+            <button type="submit" name="login">
+                Login as Admin
+            </button>
+
+            <a href="login.php">← Back to User Login</a>
+
+        </form>
+
+    </div>
+
+</div>
 
 </body>
 </html>
