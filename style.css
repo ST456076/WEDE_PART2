@@ -1,7 +1,3 @@
-/* =========================================================
-   GOOGLE FONT + ROOT VARIABLES
-========================================================= */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
@@ -19,138 +15,36 @@
   --shadow:   0 4px 24px rgba(30,30,30,.10);
 }
 
-/* =========================================================
-   GLOBAL RESET + BASE STYLES
-========================================================= */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; font-family: 'Inter', Arial, sans-serif; background: var(--cream); color: var(--charcoal); }
+a { color: inherit; text-decoration: none; }
+button, a { transition: .2s ease; }
+button { font-family: inherit; cursor: pointer; border: 0; }
+button:hover, .green-btn:hover, .outline-green-btn:hover, .primary-btn:hover, .secondary-btn:hover { transform: translateY(-2px); }
+input, select, textarea { width: 100%; padding: 13px 15px; border: 1px solid var(--sand); border-radius: var(--radius); background: var(--white); font-family: inherit; color: var(--charcoal); outline: none; }
+input:focus, select:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(58,89,68,.12); }
+textarea { min-height: 120px; resize: vertical; }
 
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  font-family: 'Inter', Arial, sans-serif;
-  background: var(--cream);
-  color: var(--charcoal);
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 10px 15px;
-  border: 1px solid var(--sand);
-  border-radius: var(--radius);
-  background: var(--white);
-  font-family: inherit;
-  color: var(--charcoal);
-  outline: none;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px rgba(58,89,68,.12);
-}
-
-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-/* =========================================================
-   AUTH PAGES (LOGIN / REGISTER)
-========================================================= */
-
+/* AUTH PAGES */
 .auth-body {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  background: radial-gradient(circle at top left, rgba(138,158,126,.35), transparent 32%), var(--cream);
-}
-
-.auth-card,
-form.auth-card {
-  width: min(430px, 100%);
-  background: var(--white);
-  padding: 34px;
-  border-radius: calc(var(--radius) + 8px);
-  box-shadow: var(--shadow);
-  border: 1px solid rgba(217,207,187,.8);
-}
-
-.auth-card.wide {
-  width: min(720px, 100%);
-}
-
-.auth-card h2 {
-  margin: 0 0 8px;
-  font-size: 32px;
-  color: var(--green-dk);
-}
-
-.muted {
-  color: #6f6b63;
-  margin-top: 0;
-}
-
-.auth-card input,
-.auth-card textarea,
-.auth-card select {
-  margin: 8px 0;
-}
-
-.auth-card button {
-  width: 100%;
-  margin-top: 10px;
-  padding: 14px;
-  border-radius: var(--radius);
-  background: var(--green);
-  color: var(--white);
-  font-weight: 800;
-}
-
-.auth-card button:hover {
-  background: var(--green-lt);
-}
-
-.auth-card a {
-  display: inline-block;
-  margin-top: 16px;
-  color: var(--green);
-  font-weight: 800;
-}
-
-.two-cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-/* =========================================================
-   SUCCESS + ERROR MESSAGES
-========================================================= */
-
-.error {
-  background: #fde9e6;
-  color: var(--error);
-  padding: 12px 14px;
-  border-radius: var(--radius);
-  margin: 12px 0;
-  font-weight: 700;
-}
-
-.success {
-  background: #e6efe8;
-  color: var(--success);
-  padding: 12px 14px;
-  border-radius: var(--radius);
-  margin: 12px 0;
-  font-weight: 700;
-}
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: #e2dcdc;
+    
+}.auth-card, form.auth-card { width: min(430px, 100%); background: var(--white); padding: 34px; border-radius: calc(var(--radius) + 8px); box-shadow: var(--shadow); border: 1px solid rgba(217,207,187,.8); }
+.auth-card.wide { width: min(720px, 100%); }
+.auth-card h2 { margin: 0 0 8px; font-size: 32px; color: var(--green-dk); }
+.muted { color: #6f6b63; margin-top: 0; }
+.auth-card input, .auth-card textarea, .auth-card select { margin: 8px 0; }
+.auth-card button { width: 100%; margin-top: 10px; padding: 14px; border-radius: var(--radius); background: var(--green); color: var(--white); font-weight: 800; }
+.auth-card button:hover { background: var(--green-lt); }
+.auth-card a { display: inline-block; margin-top: 16px; color: var(--green); font-weight: 800; }
+.two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.error { background: #fde9e6; color: var(--error); padding: 12px 14px; border-radius: var(--radius); margin: 12px 0; font-weight: 700; }
+.success { background: #e6efe8; color: var(--success); padding: 12px 14px; border-radius: var(--radius); margin: 12px 0; font-weight: 700; }
 
 /* =========================================================
    MARKETPLACE DASHBOARD
@@ -628,158 +522,38 @@ form.auth-card {
    CHECKOUT PAGE
 ========================================================= */
 
-.checkout-container{
-    min-height:80vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:60px 20px;
-    background:var(--cream);
+.checkout-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 52px;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 60px;
 }
 
-.checkout-success-card{
-    width:100%;
-    max-width:600px;
-    background:var(--white);
-    padding:50px;
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    text-align:center;
+.checkout-form h2, .order-summary h2 {
+  color: var(--green-dk);
+  margin-bottom: 24px;
 }
 
-.success-icon{
-    width:90px;
-    height:90px;
-    margin:0 auto 25px;
-    border-radius:50%;
-    background:var(--green);
-    color:white;
-    font-size:48px;
-    font-weight:bold;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+.form-group {
+  margin-bottom: 20px;
 }
 
-.checkout-success-card h1{
-    color:var(--green-dk);
-    margin-bottom:15px;
+.checkout-form input, .checkout-form select {
+  margin: 0;
 }
 
-.success-text{
-    color:#666;
-    margin-bottom:30px;
-    line-height:1.6;
+.order-summary {
+  background: var(--white);
+  padding: 32px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  height: fit-content;
+  position: sticky;
+  top: 100px;
 }
 
-.order-box{
-    background:var(--cream);
-    padding:25px;
-    border-radius:var(--radius);
-    margin-bottom:30px;
-}
-
-.order-box span{
-    display:block;
-    color:#777;
-    margin-bottom:8px;
-    font-size:14px;
-}
-
-.order-box h2{
-    color:var(--green);
-    margin:0;
-    font-size:32px;
-}
-
-.small-text{
-    color:#666;
-    line-height:1.6;
-    margin-bottom:35px;
-}
-
-.checkout-buttons{
-    display:flex;
-    justify-content:center;
-    gap:20px;
-    flex-wrap:wrap;
-}
-
-.secondary-btn{
-    background:var(--green-dk);
-}
-
-.secondary-btn:hover{
-    background:var(--green);
-}
-
-/* ==========================
-   ORDER SUCCESS PAGE FIX
-========================== */
-
-.checkout-container{
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 60px 20px;
-    background: var(--cream);
-}
-
-.checkout-success-card{
-    width: 100%;
-    max-width: 520px;
-    background: var(--white);
-    padding: 45px;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    text-align: center;
-}
-
-.success-icon{
-    width: 85px;
-    height: 85px;
-    margin: 0 auto 20px;
-    background: var(--green);
-    color: white;
-    font-size: 42px;
-    font-weight: 800;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.checkout-success-card h1{
-    color: var(--green-dk);
-    margin-bottom: 10px;
-}
-
-.success-text{
-    color: #6f6b63;
-    margin-bottom: 25px;
-    line-height: 1.5;
-}
-
-.order-box{
-    background: var(--cream);
-    padding: 20px;
-    border-radius: var(--radius);
-    margin-bottom: 30px;
-}
-
-.order-box span{
-    display:block;
-    font-size: 13px;
-    color: #777;
-    margin-bottom: 5px;
-}
-
-.order-box h2{
-    margin: 0;
-    color: var(--green);
-    font-size: 28px;
-}
 /* =========================================================
    MY LISTINGS PAGE
 ========================================================= */
@@ -927,222 +701,79 @@ form.auth-card {
     gap: 25px;
 }
 
-.wishlist-card {
+/*admin_dashbord*/
+.admin-table-box {
     background: var(--white);
     border-radius: var(--radius);
-    overflow: hidden;
     box-shadow: var(--shadow);
-    transition: all 0.3s ease;
+    overflow-x: auto;
+    padding: 20px;
 }
 
-.wishlist-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 32px rgba(30,30,30,.15);
-}
-
-.wishlist-card img {
+.admin-table {
     width: 100%;
-    height: 260px;
-    object-fit: cover;
+    border-collapse: collapse;
 }
 
-.wishlist-info {
-    padding: 18px;
+.admin-table th {
+    background: var(--green-dk);
+    color: white;
+    padding: 14px;
+    text-align: left;
 }
 
-.wishlist-info h3 {
-    margin: 0 0 8px;
-    font-size: 18px;
-    line-height: 1.3;
+.admin-table td {
+    padding: 14px;
+    border-bottom: 1px solid var(--sand);
 }
 
-.wishlist-info p {
-    color: #6f6b63;
-    margin: 6px 0 12px;
-    font-size: 14px;
+.admin-table tr:hover {
+    background: var(--cream);
 }
 
-.price {
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--green-dk);
-    margin: 8px 0 16px;
-}
-
-.wishlist-card .green-btn {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.remove-btn {
+.danger-link {
     background: var(--error);
     color: white;
-    border: none;
-    padding: 10px 16px;
+    padding: 10px 14px;
     border-radius: var(--radius);
+    text-decoration: none;
     font-weight: 700;
-    cursor: pointer;
-    width: 100%;
-    transition: 0.2s;
+    display: inline-block;
+    margin-left: 6px;
 }
 
-.remove-btn:hover {
-    background: #a13d32;
-    transform: translateY(-1px);
+.login-wrapper {
+    display: flex;
+    height: 100vh;
 }
 
-/* Empty State */
-.empty-state {
-    text-align: center;
-    padding: 120px 20px;
-    color: #6f6b63;
+/* LEFT SIDE */
+.login-left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f4f4f4;
 }
 
-.empty-state h2 {
-    color: var(--green-dk);
-    margin-bottom: 12px;
+/* RIGHT SIDE */
+.login-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.empty-state p {
-    font-size: 18px;
-    margin-bottom: 30px;
+/* LOGO */
+.login-logo {
+    width: 850px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .wishlist-container {
-        padding: 0 20px;
-    }
-    
-    .wishlist-grid {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    }
-    
-    .wishlist-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-}
-
-/* ==========================
-   NEW FOOTER
-========================== */
-
-.market-footer {
-background:#2A4033;
-color:white;
-display:grid;
-grid-template-columns:2fr repeat(4,1fr);
-gap:40px;
-padding:60px 52px;
-}
-.footer-brand h2 {
-font-size:32px;
-margin-bottom:15px;
-}
-
-.footer-brand p {
-color:#D9CFBB;
-line-height:1.6;
-}
-.footer-section {
-display:flex;
-flex-direction:column;
-gap:12px;
-}
-
-.footer-section h3 {
-color:white;
-margin-bottom:10px;
-}
-
-.footer-section a {
-color:#D9CFBB;
-text-decoration:none;
-}
-
-.footer-section a:hover {
-color:white;
-}
-
-@media(max-width:768px){
-.market-footer{
-grid-template-columns:1fr;
-}
-}
-
-/* ==================================
-   CUTE COLLECTION CATEGORY DESIGN
-================================== */
-.collection-section {
-    padding:10px 52px;
-    text-align:center;
-}
-.collection-section h2 {
-    font-size:32px;
-    color:var(--green-dk);
-    margin-bottom:10px;
-}
-.collection-section p {
-    color:#6f6b63;
-}
-.collection-grid {
-    margin-top:40px;
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-    gap:25px;
-}
-.collection-card {
-    height:220px;
-    border-radius:25px;
-    padding:30px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    box-shadow:0 8px 25px rgba(0,0,0,.12);
-    transition:.3s ease;
-}
-.collection-card:hover {
-    transform:translateY(-8px);
-}
-.collection-card h3 {
-    font-size:28px;
-    margin-bottom:10px;
-    color:white;
-}
-.collection-card p {
-    color:white;
-    margin-bottom:20px;
-}
-.collection-card a {
-    background:white;
-    color:var(--green);
-    padding:10px 22px;
-    border-radius:30px;
-    font-weight:700;
-    text-decoration:none;
-}
-.collection-card a:hover {
-    background:var(--green-dk);
-    color:white;
-}
-/* Individual category vibes */
-.women {
-background:linear-gradient(135deg,#8A9E7E,#D9CFBB);
-}
-.men {
-background:linear-gradient(135deg,#3A5944,#2A4033);
-}
-.kids {
-background:linear-gradient(135deg,#C7B8A3,#F5F2EC);
-}
-.accessories {
-background:linear-gradient(135deg,#BFA77A,#8A9E7E);
-}
-@media(max-width:768px){
-.collection-section{
-padding:40px 20px;
-}
+/* LOGIN CARD */
+.auth-card {
+    width: 500px;
+    padding: 30px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }

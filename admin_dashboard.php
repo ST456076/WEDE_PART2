@@ -1,6 +1,15 @@
 <?php
 session_start();
 include "DBConn.php";
+// Mark all unread messages as read
+$totalUnreadMessages = mysqli_fetch_assoc(
+    mysqli_query(
+        $conn,
+        "SELECT COUNT(*) AS total
+         FROM messages
+         WHERE status = 'Unread'"
+    )
+)['total'];
 include "bootstrap.php";
 
 if (!isset($_SESSION['admin_id'])) {
@@ -43,6 +52,15 @@ $totalUsers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total F
 $totalListings = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM listings"))['total'];
 $totalCart = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM cart"))['total'];
 $totalWishlist = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM wishlist"))['total'];
+// Count unread messages
+$totalUnreadMessages = mysqli_fetch_assoc(
+    mysqli_query(
+        $conn,
+        "SELECT COUNT(*) AS total
+         FROM messages
+         WHERE status = 'Unread'"
+    )
+)['total']; 
 ?>
 
 <!DOCTYPE html>
@@ -62,6 +80,9 @@ $totalWishlist = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS tota
     <nav class="market-icons">
         <a href="user_dashboard.php">View Store</a>
         <a href="logout.php">Logout</a>
+        <a class="green-btn" href="admin_messages.php">
+    View Messages
+</a>
     </nav>
 </header>
 
@@ -107,6 +128,14 @@ $totalWishlist = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS tota
                 <h2><?php echo $totalWishlist; ?></h2>
             </div>
         </div>
+            <div class="product-card">
+        <div class="product-info">
+            <p class="small-label">Unread Messages</p>
+            <h2><?php echo $totalUnreadMessages; ?></h2>
+        </div>
+    </div>
+
+</section>
     </section>
 
     <br><br>
@@ -152,6 +181,10 @@ $totalWishlist = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS tota
             <h2>Marketplace Listings</h2>
         </div>
     </div>
+    <!-- Add Listing Button -->
+     <a class="green-btn" href="admin_add_listing.php">
+    Add Listing
+</a>
 
     <div class="admin-table-box">
         <table class="admin-table">
@@ -173,15 +206,31 @@ $totalWishlist = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS tota
                     <td><?php echo htmlspecialchars($item['category']); ?></td>
                     <td><?php echo htmlspecialchars($item['size']); ?></td>
                     <td>R<?php echo number_format((float)$item['price'], 2); ?></td>
-                    <td>
-                        <a class="danger-link" href="admin_dashboard.php?delete_listing=<?php echo $item['listing_id']; ?>" onclick="return confirm('Delete this listing?')">Delete</a>
-                    </td>
+                   <td>
+
+    <!-- Edit Listing -->
+    <a
+        class="outline-green-btn"
+        href="admin_edit_listing.php?id=<?php echo $item['listing_id']; ?>">
+        Edit
+    </a>
+
+    <!-- Delete Listing -->
+    <a
+        class="danger-link"
+        href="admin_dashboard.php?delete_listing=<?php echo $item['listing_id']; ?>"
+        onclick="return confirm('Delete this listing?')">
+        Delete
+    </a>
+
+</td>
                 </tr>
             <?php } ?>
         </table>
     </div>
 
 </main>
+
 
 </body>
 </html>
